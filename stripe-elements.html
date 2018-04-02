@@ -27,7 +27,7 @@
       <div slot="stripe-card">
         <form id="form" action="[[action]]" method="post">
 
-          <div id="stripe-elements-mount-point" aria-label="Credit or Debit Card">
+          <div id="[[mountElementId]]" aria-label="Credit or Debit Card">
             <!-- Stripe will inject form here -->
           </div>
 
@@ -175,6 +175,14 @@
         },
 
         /**
+         * Mount Point Element id
+         */
+        mountElementId: {
+          type: String,
+          computed: 'generateRandomMountElementId()',
+        },
+
+        /**
          * Permitted style names.
          * @type {Array}
          * @protected
@@ -308,6 +316,8 @@
       if (error) {
         this.$.toast.open();
         this.$.toast.positionTarget = this;
+      }else{
+        this.$.toast.close();
       }
     }
 
@@ -384,8 +394,7 @@
      * @protected
      */
     mountCard() {
-      const mount = (window.ShadyDOM ? this.root : document)
-        .getElementById('stripe-elements-mount-point');
+      const mount = this.mountPoint();
       if (mount) {
         const {hidePostalCode, hideIcon, iconStyle, value} = this;
         const style = this.getStripeElementsStyles();
@@ -399,6 +408,15 @@
     }
 
     /**
+     * Returns the mount point for Stripe Elements
+     * @return {Object} DOM element at the current mountElementId
+     */
+    mountPoint() {
+      return (window.ShadyDOM ? this.root : document)
+        .getElementById(this.mountElementId);
+    }
+
+    /**
      * Sets the error and opens the toast, if needed
      * @param  {Boolean}       event.empty     true if value is empty
      * @param  {Boolean}       event.complete  true if value is well-formed and potentially complete.
@@ -409,6 +427,10 @@
     onChange({empty, complete, brand, error, value} = {}) {
       if (error) {
         this._setError(error);
+      }
+
+      if (error === undefined && this.error !== undefined){
+        this._setError(undefined);
       }
     }
 
@@ -430,7 +452,7 @@
       if (shady) {
         if (!this.__shadyDomMount) {
           const mount = document.createElement('div');
-                mount.id = 'stripe-elements-mount-point';
+                mount.id = this.mountElementId;
           this.__shadyDomMount = mount;
         }
         const slot = this.root.querySelector('[name="stripe-card"]');
@@ -469,6 +491,17 @@
         this.initStripe(this.publishableKey);
         this.mountCard();
       }
+    }
+
+    /**
+     * Generates a random mount point (UUID v4) for Stripe Elements. This will allow multiple
+     * Elements forms to be embedded on a single page.
+     * @return {String} mount element id
+     */
+    generateRandomMountElementId(){
+      return 'stripe-elements-mount-point-'+([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
     }
 
     /** Resets the Stripe card. */
