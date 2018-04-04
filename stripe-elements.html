@@ -183,6 +183,15 @@
         },
 
         /**
+         * Card Billing Info
+         * @type {Object}
+         */
+        cardData: {
+          type: Object,
+          notify: true,
+        },
+
+        /**
          * Permitted style names.
          * @type {Array}
          * @protected
@@ -519,7 +528,7 @@
      * @param  {Event} event Submit event.
      */
     submit(event) {
-      this.stripe.createToken(this.card)
+      this.stripe.createToken(this.card, this.cardData)
         .then(this.handleResponse.bind(this))
         .catch(this.handleError.bind(this));
     }
