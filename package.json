@@ -13,10 +13,11 @@
   "author": "Benny Powers <benny.p@elasticmedia.io>",
   "license": "MIT",
   "dependencies": {
-    "@polymer/polymer": "^3.0.0",
-    "@polymer/paper-toast": "^3.0.0-pre.18",
+    "@polymer/paper-button": "^3.0.0-pre.18",
     "@polymer/paper-icon-button": "^3.0.0-pre.18",
-    "@polymer/paper-button": "^3.0.0-pre.18"
+    "@polymer/paper-toast": "^3.0.0-pre.18",
+    "@polymer/polymer": "^3.0.0",
+    "show-json": "0.0.1"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^3.0.0-pre.18",
