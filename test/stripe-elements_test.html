@@ -6,10 +6,10 @@
 
     <title>stripe-elements test</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+    <script src="../../wct-browser-legacy/browser.js"></script>
 
-    <link rel="import" href="../stripe-elements.html">
+    <script type="module" src="../stripe-elements.js"></script>
   </head>
   <body>
     <test-fixture id="basic">
@@ -18,13 +18,14 @@
       </template>
     </test-fixture>
 
-    <script>
-      suite('stripe-elements', function() {
-        test('instantiating the element works', function() {
-          var element = fixture('basic');
-          assert.equal(element.is, 'stripe-elements');
-        });
-      });
-    </script>
+    <script type="module">
+import '../stripe-elements.js';
+suite('stripe-elements', function() {
+  test('instantiating the element works', function() {
+    var element = fixture('basic');
+    assert.equal(element.is, 'stripe-elements');
+  });
+});
+</script>
   </body>
 </html>

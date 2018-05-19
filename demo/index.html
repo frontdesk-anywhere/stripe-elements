@@ -8,20 +8,38 @@
 
     <script src="https://js.stripe.com/v3/"></script>
 
-    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../../paper-input/paper-input.html">
-    <link rel="import" href="../../paper-button/paper-button.html">
-    <link rel="import" href="../../show-json/show-json.html">
-    <link rel="import" href="../stripe-elements.html">
+    <script type="module" src="../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+    <script type="module" src="../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
+    <script type="module" src="../../@polymer/paper-input/paper-input.js"></script>
+    <script type="module" src="../../@polymer/paper-button/paper-button.js"></script>
+    <script type="module" src="../../show-json/show-json.js"></script>
+    <script type="module" src="../stripe-elements.js"></script>
 
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
+    <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+$_documentContainer.setAttribute('style', 'display: none;');
+
+$_documentContainer.innerHTML = `<style is="custom-style" include="demo-pages-shared-styles">
+    </style>`;
+
+document.head.appendChild($_documentContainer.content);
+</script>
   </head>
   <body>
-    <div class="vertical-section-container centered">
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
       <h3>Basic stripe-elements demo</h3>
       <demo-snippet>
 
@@ -53,28 +71,24 @@
                 <li>Press "Get Token" to generate a token.</li>
               </ol>
 
-              <paper-input id="keyInput"
-                  label="Input Stripe Publishable Key Here"
-                  value="{{key}}"></paper-input>
+              <paper-input id="keyInput" label="Input Stripe Publishable Key Here" value="{{key}}"></paper-input>
 
               <div class="form">
 
-                <stripe-elements id="stripe"
-                    stripe-ready="{{ready}}"
-                    publishable-key="[[key]]"
-                    token="{{token}}"></stripe-elements>
+                <stripe-elements id="stripe" stripe-ready="{{ready}}" publishable-key="[[key]]" token="{{token}}"></stripe-elements>
 
-                <paper-button id="button"
-                    disabled="[[!ready]]"
-                    onclick="stripe.submit();">Get Token</paper-button>
+                <paper-button id="button" disabled="[[!ready]]" onclick="stripe.submit();">Get Token</paper-button>
 
               </div>
 
-              <show-json hide-copy-button json="[[token]]"></show-json>
+              <show-json hide-copy-button="" json="[[token]]"></show-json>
             </template>
           </dom-bind>
         </template>
       </demo-snippet>
-    </div>
+    </div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
   </body>
 </html>
