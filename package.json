@@ -13,18 +13,18 @@
   "author": "Benny Powers <benny.p@elasticmedia.io>",
   "license": "MIT",
   "dependencies": {
-    "@polymer/paper-button": "^3.0.0-pre.18",
-    "@polymer/paper-icon-button": "^3.0.0-pre.18",
-    "@polymer/paper-toast": "^3.0.0-pre.18",
+    "@polymer/paper-button": "^3.0.0-pre.19",
+    "@polymer/paper-icon-button": "^3.0.0-pre.19",
+    "@polymer/paper-toast": "^3.0.0-pre.19",
     "@polymer/polymer": "^3.0.0",
     "show-json": "0.0.1"
   },
   "devDependencies": {
-    "@polymer/iron-component-page": "^3.0.0-pre.18",
-    "@polymer/iron-demo-helpers": "^3.0.0-pre.18",
+    "@polymer/iron-component-page": "^3.0.0-pre.19",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
     "wct-browser-legacy": "^0.0.1-pre.11",
     "@webcomponents/webcomponentsjs": "^2.0.0",
-    "@polymer/paper-input": "^3.0.0-pre.18",
-    "@polymer/paper-button": "^3.0.0-pre.18"
+    "@polymer/paper-input": "^3.0.0-pre.19",
+    "@polymer/paper-button": "^3.0.0-pre.19"
   }
 }
