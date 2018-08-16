@@ -16,8 +16,7 @@
     "@polymer/paper-button": "^3.0.0-pre.19",
     "@polymer/paper-icon-button": "^3.0.0-pre.19",
     "@polymer/paper-toast": "^3.0.0-pre.19",
-    "@polymer/polymer": "^3.0.0",
-    "show-json": "0.0.1"
+    "@polymer/polymer": "^3.0.0"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^3.0.0-pre.19",

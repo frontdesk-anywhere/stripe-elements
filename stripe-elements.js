@@ -394,6 +394,10 @@ class StripeElements extends TemplateStamp(PolymerElement) {
     const bubbles = true;
     const composed = true;
     this.dispatchEvent(new ErrorEvent('stripe-error', {error, bubbles, composed}));
+    if (typeof error !== "object") {
+      // eslint-disable-next-line no-console
+      console.error("Unexpected error value: %o", error);
+    }
     // Show error in UI
     this._setError(error.message);
   }
@@ -441,7 +445,7 @@ class StripeElements extends TemplateStamp(PolymerElement) {
    * @protected
    */
   mountCard() {
-    const mount = (window.ShadyDOM ? this.root : document).getElementById(this.mountElementId);
+    const mount = document.getElementById(this.mountElementId);
     if (mount) {
       const {hidePostalCode, hideIcon, iconStyle, value} = this;
       const style = this.getStripeElementsStyles();
@@ -489,41 +493,44 @@ class StripeElements extends TemplateStamp(PolymerElement) {
   }
 
   /**
-   * Prepares to mount Stripe Elements in light DOM.
+   * Prepares to mount Stripe Elements in light DOM so Stripe.js can
+   * access it with a document selector.
    * @param  {Boolean} $0.shady If shady DOM is in use.
    * @protected
    */
   prepare({shady}) {
-    // const target = shady ? this.root : document.head; target.appendChild(this._stampTemplate(this.$.stripeStylesTemplate));
+    // trace each shadow boundary between us and the document
+    let host = this;
+    let shadowHosts = [this];
+
+    while (host = host.getRootNode().host) {
+        host && shadowHosts.push(host);
+    }
+
     if (shady) {
       if (!this.__shadyDomMount) {
         const mount = document.createElement('div');
               mount.id = this.mountElementId;
         this.__shadyDomMount = mount;
       }
-      const slot = this.root.querySelector('[name="stripe-card"]');
-      slot.appendChild(this.__shadyDomMount);
-    } else {
-      // trace each shadow boundary between us and the document
-      let host = this;
-      let shadowHosts = [this];
-      while (host = host.getRootNode().host) {
-          host && shadowHosts.push(host);
-      }
 
+      this.__shadyDomMount = this._stampTemplate(this.$.stripeCardTemplate);
+      shadowHosts.pop().appendChild(this.__shadyDomMount);
+
+    } else {
       // append template to `app-shell` (as light DOM)
       // stamp stripe template
       this.__stripeTemplate = this._stampTemplate(this.$.stripeCardTemplate);
       shadowHosts.pop().appendChild(this.__stripeTemplate);
-
-      // leave breadcrumbs
-      shadowHosts.forEach((host) => {
-        const slot = document.createElement('slot');
-              slot.setAttribute('slot', 'stripe-card');
-              slot.setAttribute('name', 'stripe-card');
-        host.appendChild(slot);
-      });
     }
+
+    // leave breadcrumbs
+    shadowHosts.forEach((host) => {
+      const slot = document.createElement('slot');
+            slot.setAttribute('slot', 'stripe-card');
+            slot.setAttribute('name', 'stripe-card');
+      host.appendChild(slot);
+    });
   }
 
   /**

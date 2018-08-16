@@ -26,23 +26,16 @@
         See: https://github.com/Polymer/polymer-modulizer/issues/154
         -->
     <script type="module">
-const $_documentContainer = document.createElement('template');
-$_documentContainer.setAttribute('style', 'display: none;');
-
-$_documentContainer.innerHTML = `<style is="custom-style" include="demo-pages-shared-styles">
-    </style>`;
-
-document.head.appendChild($_documentContainer.content);
-</script>
+      const $_documentContainer = document.createElement('template');
+      $_documentContainer.setAttribute('style', 'display: none;');
+      $_documentContainer.innerHTML = `<style is="custom-style" include="demo-pages-shared-styles"></style>`;
+      document.head.appendChild($_documentContainer.content);
+    </script>
   </head>
   <body>
-    <script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+    <div class="vertical-section-container centered">
       <h3>Basic stripe-elements demo</h3>
       <demo-snippet>
-
         <template>
           <dom-bind>
             <template>
@@ -74,21 +67,24 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
               <paper-input id="keyInput" label="Input Stripe Publishable Key Here" value="{{key}}"></paper-input>
 
               <div class="form">
-
                 <stripe-elements id="stripe" stripe-ready="{{ready}}" publishable-key="[[key]]" token="{{token}}"></stripe-elements>
-
                 <paper-button id="button" disabled="[[!ready]]" onclick="stripe.submit();">Get Token</paper-button>
-
               </div>
-
-              <show-json hide-copy-button="" json="[[token]]"></show-json>
+              <pre id="json"></pre>
             </template>
+            <script>
+                document.addEventListener('stripe-token', function(e){
+                    let tokenValue = this.querySelector("stripe-elements").token;
+                    console.log("token: %o", tokenValue);
+                    document.getElementById("json").innerHTML = JSON.stringify(tokenValue, null, 2);
+                },1);
+                document.addEventListener('stripe-error', function(e){
+                    console.log("error: %o", e);
+                },1);
+              </script>
           </dom-bind>
         </template>
       </demo-snippet>
-    </div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+    </div>
   </body>
 </html>
